@@ -4,13 +4,13 @@ return {
     dependencies = {
       { 'williamboman/mason.nvim', config = true },
       'williamboman/mason-lspconfig.nvim',
-      { 'j-hui/fidget.nvim',       opts = {} },
-      { 'folke/neodev.nvim',       opts = {} },
+      { 'j-hui/fidget.nvim', opts = {} },
+      { 'folke/neodev.nvim', opts = {} },
     },
     -- nvim-lspconfig's options
     opts = {
       inlay_hints = {
-        enabled = true
+        enabled = true,
       },
       -- server list
       servers = {
@@ -22,6 +22,7 @@ return {
           },
         },
         pyright = {},
+        sqlls = {},
       },
       -- capabilities
       capabilities = {},
@@ -41,15 +42,14 @@ return {
     --more config?
     config = function(_, opts)
       local servers = opts.servers
-      local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      local has_cmp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
       local capabilities = vim.tbl_deep_extend(
-        "force",
+        'force',
         {},
         vim.lsp.protocol.make_client_capabilities(),
         has_cmp and cmp_nvim_lsp.default_capabilities() or {},
         opts.capabilities or {}
       )
-
 
       local on_attach = function(_, bufnr)
         -- NOTE: Remember that lua is a real programming language, and as such it is possible
@@ -97,7 +97,7 @@ return {
       end
 
       local function setup(server)
-        local server_opts = vim.tbl_deep_extend("force", {
+        local server_opts = vim.tbl_deep_extend('force', {
           capabilities = vim.deepcopy(capabilities),
           on_attach = on_attach,
         }, servers[server] or {})
@@ -106,19 +106,19 @@ return {
           if opts.setup[server](server, server_opts) then
             return
           end
-        elseif opts.setup["*"] then
-          if opts.setup["*"](server, server_opts) then
+        elseif opts.setup['*'] then
+          if opts.setup['*'](server, server_opts) then
             return
           end
         end
-        require("lspconfig")[server].setup(server_opts)
+        require('lspconfig')[server].setup(server_opts)
       end
 
       -- get all the servers that are available through mason-lspconfig
-      local have_mason, mlsp = pcall(require, "mason-lspconfig")
+      local have_mason, mlsp = pcall(require, 'mason-lspconfig')
       local all_mslp_servers = {}
       if have_mason then
-        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+        all_mslp_servers = vim.tbl_keys(require('mason-lspconfig.mappings.server').lspconfig_to_package)
       end
 
       local ensure_installed = {} ---@type string[]
@@ -135,33 +135,36 @@ return {
       end
 
       if have_mason then
-        mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
+        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
     end,
   },
 
   {
 
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
-    build = ":MasonUpdate",
+    'williamboman/mason.nvim',
+    cmd = 'Mason',
+    keys = { { '<leader>cm', '<cmd>Mason<cr>', desc = 'Mason' } },
+    build = ':MasonUpdate',
     opts = {
       ensure_installed = {
-        "stylua",
+        'stylua',
+        'isort',
+        'black',
+        'flake8',
       },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      mr:on("package:install:success", function()
+      require('mason').setup(opts)
+      local mr = require 'mason-registry'
+      mr:on('package:install:success', function()
         vim.defer_fn(function()
           -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger({
-            event = "FileType",
+          require('lazy.core.handler.event').trigger {
+            event = 'FileType',
             buf = vim.api.nvim_get_current_buf(),
-          })
+          }
         end, 100)
       end)
       local function ensure_installed()
