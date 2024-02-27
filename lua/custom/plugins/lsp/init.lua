@@ -23,6 +23,24 @@ return {
         },
         pyright = {},
         sqlls = {},
+        clangd = {},
+        rust_analyzer = {
+          --   settings = {
+          --     ['rust-analyzer'] = {
+          --       allFeatures = true,
+          --       checkOnSave = {
+          --         command = {
+          --           'cargo',
+          --           'clippy',
+          --           '--workspace',
+          --           '--message-format=json',
+          --           '--all-targets',
+          --           '--all-features',
+          --         },
+          --       },
+          --     },
+          --   },
+        },
       },
       -- capabilities
       capabilities = {},

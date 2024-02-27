@@ -105,7 +105,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -189,10 +189,39 @@ require('lazy').setup({
       require('rose-pine').setup {
         variant = 'auto',
         styles = {
-          transparency = true
+          transparency = false,
+        },
+        highlight_groups = { -- Background of split bars
+          VertSplit = {
+            fg = 'foam',
+            bg = 'muted',
+          },
+          Comment = {
+            fg = 'foam',
+          },
         },
       }
-      vim.cmd('colorscheme rose-pine')
+      -- uncomment to enable rose-pine
+      -- vim.cmd 'colorscheme rose-pine'
+    end,
+  },
+
+  {
+    'catppuccin/nvim',
+    name = 'catpuccin',
+    config = function()
+      require('catppuccin').setup {
+        integrations = {
+          cmp = true,
+          treesitter = true,
+        },
+        flavor = 'frappe',
+        dim_inactive = {
+          enabled = true,
+          percentage = 0.1,
+        },
+      }
+      vim.cmd.colorscheme 'catppuccin'
     end,
   },
 
@@ -207,6 +236,7 @@ require('lazy').setup({
         component_separators = '|',
         section_separators = '',
       },
+      theme = 'wombat',
     },
   },
 
@@ -268,10 +298,10 @@ require('lazy').setup({
 }, {})
 
 -- [[ Options require ]]
-require("custom.opts")
+require 'custom.opts'
 
 -- [[ Keymaps require ]]
-require('custom.keymaps')
+require 'custom.keymaps'
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -510,15 +540,15 @@ cmp.setup {
     { name = 'path' },
   },
   formatting = {
-    fields = { "kind", "abbr", "menu" },
+    fields = { 'kind', 'abbr', 'menu' },
     format = function(entry, vim_item)
       vim_item.menu = ({
-        luasnip = "[Lua-Snippet]",
-        path = "[Path]",
-        nvim_lsp = "[LSP]"
+        luasnip = '[Lua-Snippet]',
+        path = '[Path]',
+        nvim_lsp = '[LSP]',
       })[entry.source.name]
       return vim_item
-    end
+    end,
   },
 }
 

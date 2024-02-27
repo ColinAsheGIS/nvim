@@ -40,3 +40,6 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Pretend 2 be systems programmer with 2 spaces for tab instead of 4
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4 -- Sometimes vim sleuth plugin b trippin
